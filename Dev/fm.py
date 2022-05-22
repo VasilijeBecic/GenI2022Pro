@@ -90,8 +90,8 @@ class FMIndex:
     
 
 # TESTS
-text = 'abaaba' # Example - Expected
-# text = 'GATGCGAGAGATG'
+# text = 'abaaba' # Example - Expected
+text = 'GATGCGAGAGATG'
 # text = 'BANANA'
 fmIndex = FMIndex(text)
 
@@ -105,8 +105,8 @@ fmIndex = FMIndex(text)
 # print()
 # Expected {'$': (0, 0), 'a': (1, 1), 'b': (2, 5)}
 
-pattern = 'aba'
-# pattern = 'GAGA'
+# pattern = 'aba'
+pattern = 'GAGA'
 # pattern = 'ANA'
 print('Query for pattern: ' + pattern)
 print(fmIndex.query(pattern))
