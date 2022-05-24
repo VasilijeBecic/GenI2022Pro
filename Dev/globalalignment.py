@@ -21,12 +21,14 @@ class Aligner:
     gap = 0
     
     def __init__(self, match, mismatch, gap):
+        ''' Match, mismatch, gap '''
         self.match = match
         self.mismatch = mismatch
         self.gap = gap
         
 
-    def scoringMatrix(self, a, b):
+    def scoring_matrix(self, a, b):
+        ''' Accepts a, b '''
         if a == b: return 1
         if a == '_' or b == '_' : return -7
         maxb, minb = max(a, b), min(a, b)
@@ -35,26 +37,28 @@ class Aligner:
         return -2
 
 
-    def globalAlignment(self, x, y, scoringMatrix):
+    def global_alignment(self, x, y):
+        ''' Accepts x, y '''
         D = numpy.zeros((len(x) + 1, len(y) + 1), dtype=int)
         
         for i in range(1, len(x) + 1):
-            D[i,0] = D[i-1,0] + scoringMatrix(x[i-1], '_')  
+            D[i,0] = D[i-1,0] + self.scoring_matrix(x[i-1], '_')  
         for j in range(1, len(y)+1):
-            D[0,j] = D[0,j-1] + scoringMatrix('_', y[j-1])
+            D[0,j] = D[0,j-1] + self.scoring_matrix('_', y[j-1])
         
         for i in range(1, len(x) + 1):
             for j in range(1, len(y) + 1):
-                D[i,j] = max(D[i-1,j]   + scoringMatrix(x[i-1], '_'),
-                             D[i,j-1]   + scoringMatrix('_', y[j-1]), 
-                             D[i-1,j-1] + scoringMatrix(x[i-1], y[j-1]))
+                D[i,j] = max(D[i-1,j]   + self.scoring_matrix(x[i-1], '_'),
+                             D[i,j-1]   + self.scoring_matrix('_', y[j-1]), 
+                             D[i-1,j-1] + self.scoring_matrix(x[i-1], y[j-1]))
                 
         # function returns table and global alignment score
         #alignment score is in cell (n,m) of the matrix
         return D, D[len(x),len(y)] 
 
 
-    def traceback(self, x, y, V, scoringMatrix):
+    def traceback(self, x, y, V):
+        ''' Accepts x, y, V '''
         # initializing starting position cell(n,m)
         i=len(x)
         j=len(y)
@@ -70,9 +74,9 @@ class Aligner:
             
             if i > 0 and j > 0:
                 delta = 1 if x[i-1] == y[j-1] else 0
-                d = V[i-1,j-1] + scoringMatrix(x[i-1], y[j-1])  # diagonal movement   
-            if i > 0: v = V[i-1,j] + scoringMatrix(x[i-1], '_')  # vertical movement
-            if j > 0: h = V[i,j-1] + scoringMatrix('_', y[j-1])  # horizontal movement
+                d = V[i-1,j-1] + self.scoring_matrix(x[i-1], y[j-1])  # diagonal movement   
+            if i > 0: v = V[i-1,j] + self.scoring_matrix(x[i-1], '_')  # vertical movement
+            if j > 0: h = V[i,j-1] + self.scoring_matrix('_', y[j-1])  # horizontal movement
                 
             # backtracing to next (previous) cell
             if d >= v and d >= h:
@@ -106,6 +110,7 @@ class Aligner:
 
 
 # TESTS
+'''
 x = 'TACGTCAGC'
 y = 'TATGTCATGC'
 match = 2 # 0 1 2
@@ -114,16 +119,17 @@ gap = -7 # -5, -7
 
 aligner = Aligner(match, mismatch, gap)
 
-D, alignmentScore = aligner.globalAlignment(x, y, aligner.scoringMatrix)
-alignment, transcript = aligner.traceback(x, y, D,  aligner.scoringMatrix)
+D, alignmentScore = aligner.global_alignment(x, y)
+alignment, transcript = aligner.traceback(x, y, D)
 
 print(alignment)
 print(transcript)
 print(D)
 print(alignmentScore)
 print(transcript)
+
 # Expected: 
-'''
+
 TACGTCA_GC
 || |||| ||
 TATGTCATGC

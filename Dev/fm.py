@@ -91,9 +91,9 @@ class FMIndex:
 
 # TESTS
 # text = 'abaaba' # Example - Expected
-text = 'GATGCGAGAGATG'
+# text = 'GATGCGAGAGATG'
 # text = 'BANANA'
-fmIndex = FMIndex(text)
+# fmIndex = FMIndex(text)
 
 # print('Tally:')
 # print(fmIndex.tally)
@@ -106,11 +106,11 @@ fmIndex = FMIndex(text)
 # Expected {'$': (0, 0), 'a': (1, 1), 'b': (2, 5)}
 
 # pattern = 'aba'
-pattern = 'GAGA'
+# pattern = 'GAGA'
 # pattern = 'ANA'
-print('Query for pattern: ' + pattern)
-print(fmIndex.query(pattern))
-print()
+# print('Query for pattern: ' + pattern)
+# print(fmIndex.query(pattern))
+# print()
 # Expected
 # For text='GAGA' -> [5,7]
 # For text='ANA' -> [1,3]
