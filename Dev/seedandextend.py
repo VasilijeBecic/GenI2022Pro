@@ -24,11 +24,13 @@ def reverse_complement(read):
 
 
 def seed_and_extend(referenceGenome, read, seedLength, margin, aligner, fmIndex):
+    ''' referenceGenome, read, seedLength, margin, aligner, fmIndex'''
     results = []
     seed = read[0:seedLength]
     
     seedPositions = fmIndex.query(seed)
     
+    i = 0
     for position in seedPositions:
         # print(position)
         start = position + seedLength
@@ -42,17 +44,23 @@ def seed_and_extend(referenceGenome, read, seedLength, margin, aligner, fmIndex)
         D, alignmentScore = aligner.global_alignment(alignedRef, alignedRead)
         alignment, transcript = aligner.traceback(alignedRef, alignedRead, D)
         
+        print('alignment completed for ' + str(i))
+        
+        i += 1
+        
         results.append((start - seedLength, alignmentScore, transcript))
     
+    print('seed_and_extend completed')
+    results.sort(key=lambda x: x[1], reverse=True)
     return results
     
 
 
 
 
-
-# TESTS
 '''
+# TESTS
+
 referenceGenome = 'AAGAAGTCAGGGAGCAAGCAGAGTCAGGGAGCAAGCCACCAC'
 read = 'AGTCAGGGAGCAAGC'
 reversedRead = reverse_complement(read)

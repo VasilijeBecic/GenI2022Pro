@@ -27,7 +27,8 @@ class BWT:
     def suffix_array(self, t):
         """ Given T return suffix array SA(T).  We use Python's sorted
             function here for simplicity, but we can do better. """
-        saMatrix = sorted([(t[i:], i) for i in range(len(t))])
+        saMatrix = [(t[i:], i) for i in range(len(t))]
+        saMatrix.sort()
         # Extract and return just the offsets
         #     print(satups)
         return list(map(lambda x: x[1], saMatrix))
@@ -82,7 +83,7 @@ class BWT:
         return t
 
 
-'''
+
 # TESTS
 text = 'abaaba$'
 bwt = BWT()
@@ -107,4 +108,9 @@ print('Last col with ranks')
 print(bwt.last_col_with_ranks())
 print()
 # Expected: [(0, 'a'), (0, 'b'), (1, 'b'), (1, 'a'), (0, '$'), (2, 'a'), (3, 'a')]
-'''
+
+
+print('Tots.items()')
+print(bwt.tots.items())
+print()
+# Expected: dict_items([('a', 4), ('b', 2), ('$', 1)])

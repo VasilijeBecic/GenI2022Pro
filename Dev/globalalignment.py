@@ -9,10 +9,13 @@ import numpy
 
 
 '''
-    def scoringMatrix(self, a, b):
-        if a == b: return self.match
-        if a == '_' or b == '_' : return self.gap
-        return self.mismatch
+    def scoring_matrix(self, a, b):
+        if a == b: return 1
+        if a == '_' or b == '_' : return -7
+        maxb, minb = max(a, b), min(a, b)
+        if minb == 'A' and maxb == 'G': return -1
+        if minb == 'C' and maxb == 'T': return -1
+        return -2
 '''
 
 class Aligner:
@@ -28,13 +31,9 @@ class Aligner:
         
 
     def scoring_matrix(self, a, b):
-        ''' Accepts a, b '''
-        if a == b: return 1
-        if a == '_' or b == '_' : return -7
-        maxb, minb = max(a, b), min(a, b)
-        if minb == 'A' and maxb == 'G': return -1
-        if minb == 'C' and maxb == 'T': return -1
-        return -2
+        if a == b: return self.match
+        if a == '_' or b == '_' : return self.gap
+        return self.mismatch
 
 
     def global_alignment(self, x, y):
@@ -107,12 +106,13 @@ class Aligner:
         return alignment, tr[::-1]
 
 
-
-
-# TESTS
 '''
+# TESTS
+
 x = 'TACGTCAGC'
 y = 'TATGTCATGC'
+
+
 match = 2 # 0 1 2
 mismatch = -3 # -3 -2
 gap = -7 # -5, -7
@@ -128,22 +128,22 @@ print(D)
 print(alignmentScore)
 print(transcript)
 
-# Expected: 
+# Expected for match = 2, mismatch = -3, gap = -7: 
 
 TACGTCA_GC
 || |||| ||
 TATGTCATGC
 MMRMMMMIMM
 [[  0  -7 -14 -21 -28 -35 -42 -49 -56 -63 -70]
- [ -7   1  -6 -13 -20 -27 -34 -41 -48 -55 -62]
- [-14  -6   2  -5 -12 -19 -26 -33 -40 -47 -54]
- [-21 -13  -5   1  -6 -13 -18 -25 -32 -39 -46]
- [-28 -20 -12  -6   2  -5 -12 -19 -26 -31 -38]
- [-35 -27 -19 -11  -5   3  -4 -11 -18 -25 -32]
- [-42 -34 -26 -18 -12  -4   4  -3 -10 -17 -24]
- [-49 -41 -33 -25 -19 -11  -3   5  -2  -9 -16]
- [-56 -48 -40 -32 -24 -18 -10  -2   3  -1  -8]
- [-63 -55 -47 -39 -31 -25 -17  -9  -3   1   0]]
-0
+ [ -7   2  -5 -12 -19 -26 -33 -40 -47 -54 -61]
+ [-14  -5   4  -3 -10 -17 -24 -31 -38 -45 -52]
+ [-21 -12  -3   1  -6 -13 -15 -22 -29 -36 -43]
+ [-28 -19 -10  -6   3  -4 -11 -18 -25 -27 -34]
+ [-35 -26 -17  -8  -4   5  -2  -9 -16 -23 -30]
+ [-42 -33 -24 -15 -11  -2   7   0  -7 -14 -21]
+ [-49 -40 -31 -22 -18  -9   0   9   2  -5 -12]
+ [-56 -47 -38 -29 -20 -16  -7   2   6   4  -3]
+ [-63 -54 -45 -36 -27 -23 -14  -5  -1   3   6]]
+6
 MMRMMMMIMM
 '''

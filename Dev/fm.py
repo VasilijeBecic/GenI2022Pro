@@ -16,10 +16,18 @@ class FMIndex:
     def __init__(self, text):
         text = text + '$'
         self.clear_parameters()
+        print('Perform BWT')
         self.bwt = BWT() # We only care about L and SA
         self.bwt.transform(text)
+        print('End BWT')
+        
+        print('Init. tally')
         self.init_tally() # Initialize tally
+        print('Finish init. tally')
+        
+        print('Init. c')
         self.init_c() # Initialize c
+        print('Finish init. c')
         
     
     def clear_parameters(self):
@@ -85,36 +93,39 @@ class FMIndex:
             k -= 1
         for i in range(start, end + 1):
             positions.append(self.bwt.saIndexes[i])
-        return sorted(positions)
+        positions.sort()
+        return positions.copy()
         
     
-
+'''
 # TESTS
 # text = 'abaaba' # Example - Expected
 # text = 'GATGCGAGAGATG'
-# text = 'BANANA'
-# fmIndex = FMIndex(text)
+text = 'BANANA'
 
-# print('Tally:')
-# print(fmIndex.tally)
-# print()
+fmIndex = FMIndex(text)
+
+print('Tally:')
+print(fmIndex.tally)
+print()
 # Expected {'$': [0, 0, 0, 0, 1, 1, 1], 'a': [1, 1, 1, 2, 2, 3, 4], 'b': [0, 1, 2, 2, 2, 2, 2]}
 
-# print('C')
-# print(fmIndex.c)
-# print()
+print('C')
+print(fmIndex.c)
+print()
 # Expected {'$': (0, 0), 'a': (1, 1), 'b': (2, 5)}
 
 # pattern = 'aba'
 # pattern = 'GAGA'
-# pattern = 'ANA'
-# print('Query for pattern: ' + pattern)
-# print(fmIndex.query(pattern))
-# print()
+pattern = 'ANA'
+print('Query for pattern: ' + pattern)
+print(fmIndex.query(pattern))
+print()
+
 # Expected
 # For text='GAGA' -> [5,7]
 # For text='ANA' -> [1,3]
-
+'''
 
 
 
