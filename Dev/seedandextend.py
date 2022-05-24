@@ -59,7 +59,7 @@ def seed_and_extend(referenceGenome, read, seedLength, margin, aligner, fmIndex)
 
 
 
-
+'''
 # TESTS
 
 referenceGenome = 'AAGAAGTCAGGGAGCAAGCAGAGTCAGGGAGCAAGCCACCAC'
@@ -79,3 +79,4 @@ print(reversedRead)
 # [(4, -9, 'MMMMMDD'), (21, -9, 'MMMMDMD')]
 # reversed read 
 # ['G', 'C', 'T', 'T', 'G', 'C', 'T', 'C', 'C', 'C', 'T', 'G', 'A', 'C', 'T']
+'''

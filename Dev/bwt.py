@@ -1,4 +1,11 @@
 '''Class used for performing Burrows-Wheeler transformation.'''
+from datetime import datetime
+
+def print_curr_datetime(message):
+    now = datetime.now()
+    dtString = now.strftime("%d/%m/%Y %H:%M:%S")
+    print(str(message) + " = ", dtString)
+
 class BWT:
     transformedText = '' 
     saIndexes = []
@@ -16,12 +23,14 @@ class BWT:
         
 
     def transform(self, text):
+        print_curr_datetime('BWT transform Begin')
         '''Performs BW transformation and keeps the result in transformedText and saIndexes.
         Also, initializes tots (pairs char:#), ranks (for transformedText).'''
         self.clear_parameters()
         self.transformedText = self.bwt_via_sa(text) # Initializes transformedText, saIndexes
         self.rank_bwt()  # Initializes tots, ranks
         self.calculate_first_col() # Initializes firstCol
+        print_curr_datetime('BWT transform End')
         
         
     def suffix_array(self, t):

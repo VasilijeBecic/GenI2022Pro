@@ -7,6 +7,7 @@ Created on Tue May 24 20:41:40 2022
 from seedandextend import seed_and_extend
 from seedandextend import reverse_complement
 from globalalignment import Aligner
+from bwt import print_curr_datetime
 from fm import FMIndex
 from Bio import SeqIO
 import sys
@@ -34,14 +35,9 @@ def readFASTQ(fastq_file):
 # print(readFASTA(fasta + '.fasta'))
 # print(readFASTQ(fastq + '.fastq')[0])
 
-def print_curr_datetime(message):
-    now = datetime.now()
-    dtString = now.strftime("%d/%m/%Y %H:%M:%S")
-    print(str(message) + " = ", dtString)
-
 
 def store_to_csv(data, exportFileName):
-    df = pd.DataFrame(data, columns =['Position', 'alignmentScore', 'transcript'])
+    df = pd.DataFrame(data, columns =['position','alignment_score','transcript'])
     df.to_csv(exportFileName)
 
 
@@ -81,13 +77,14 @@ def main():
     
     i = 1
     print("Start reads")
-    allresults = []
+    fileName = 'results/result_read'
+
+    results = []
     for read in reads:
         print_curr_datetime("Start datetime for read " + str(i))
         
         results = seed_and_extend(referenceGenome, read, seedlength, margin, aligner, fmIndex)
-        results.append(i)
-        allresults.append(results)
+        store_to_csv(results, fileName + str(i)+'.csv')
         
         print_curr_datetime("End datetime for read " + str(i))
         
@@ -96,8 +93,7 @@ def main():
         
         read = reverse_complement(read)
         results = seed_and_extend(referenceGenome, read, seedlength, margin, aligner, fmIndex)
-        results.append(i)
-        allresults.append(results)
+        store_to_csv(results, fileName + 'reversed' + str(i)+'.csv')
         
         print_curr_datetime("End datetime for reversed read " + str(i))
         
@@ -105,7 +101,6 @@ def main():
     
     
     print("Finish reads and all")
-    store_to_csv(allresults, 'result.csv')
     
     print_curr_datetime("ANALYSIS FINISHED")
     
