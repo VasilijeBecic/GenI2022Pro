@@ -83,7 +83,7 @@ class BWT:
         return t
 
 
-
+'''
 # TESTS
 text = 'abaaba$'
 bwt = BWT()
@@ -114,3 +114,4 @@ print('Tots.items()')
 print(bwt.tots.items())
 print()
 # Expected: dict_items([('a', 4), ('b', 2), ('$', 1)])
+'''

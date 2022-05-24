@@ -11,6 +11,7 @@ from fm import FMIndex
 from Bio import SeqIO
 import sys
 import pandas as pd
+from datetime import datetime
 
 
 def readFASTA(fasta_file):
@@ -33,6 +34,11 @@ def readFASTQ(fastq_file):
 # print(readFASTA(fasta + '.fasta'))
 # print(readFASTQ(fastq + '.fastq')[0])
 
+def print_curr_datetime(message):
+    now = datetime.now()
+    dtString = now.strftime("%d/%m/%Y %H:%M:%S")
+    print(str(message) + " = ", dtString)
+
 
 def store_to_csv(data, exportFileName):
     df = pd.DataFrame(data, columns =['Position', 'alignmentScore', 'transcript'])
@@ -44,6 +50,15 @@ def main():
     # To pass argv in Spyder -> Run>Configuration per file>Command line options. i.e: 2 3 a
     script, fasta, fastq, match, mismatch, gap, seedlength, margin = sys.argv
     
+    match = int(match)
+    mismatch= int(mismatch)
+    gap = int(gap)
+    seedlength = int(seedlength)
+    margin = int(margin)
+    
+    print_curr_datetime("ANALYSIS START")
+    
+    
     # fasta += '.fasta'
     # fastq += '.fastq'
     print('Read files')
@@ -51,9 +66,8 @@ def main():
     reads = readFASTQ(fastq)
     print('Files read')
     print()
-    
-    # for read in reads:
-        #
+
+        
      
     print('Begin fm index init.')
     fmIndex = FMIndex(referenceGenome)
@@ -66,12 +80,34 @@ def main():
     print()
     
     i = 1
-    print('Begin for read ' + str(i))
-    results = aligner.seed_and_extend(referenceGenome, reads[0].seq, seedlength, margin, aligner, fmIndex)
-    print('Finish for read ' + str(i))
+    print("Start reads")
+    allresults = []
+    for read in reads:
+        print_curr_datetime("Start datetime for read " + str(i))
+        
+        results = seed_and_extend(referenceGenome, read, seedlength, margin, aligner, fmIndex)
+        results.append(i)
+        allresults.append(results)
+        
+        print_curr_datetime("End datetime for read " + str(i))
+        
+        
+        print_curr_datetime("Start datetime for reversed read " + str(i))
+        
+        read = reverse_complement(read)
+        results = seed_and_extend(referenceGenome, read, seedlength, margin, aligner, fmIndex)
+        results.append(i)
+        allresults.append(results)
+        
+        print_curr_datetime("End datetime for reversed read " + str(i))
+        
+        i += 1
     
-    print()
-    store_to_csv(results, 'result.csv')
+    
+    print("Finish reads and all")
+    store_to_csv(allresults, 'result.csv')
+    
+    print_curr_datetime("ANALYSIS FINISHED")
     
     '''
     # TESTS
