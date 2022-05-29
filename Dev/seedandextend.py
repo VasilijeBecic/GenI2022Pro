@@ -25,8 +25,8 @@ def reverse_complement(read):
     return reversedRead
 
 
-def seed_and_extend(referenceGenome, read, seedLength, margin, aligner, fmIndex):
-    ''' referenceGenome, read, seedLength, margin, aligner, fmIndex'''
+def seed_and_extend(referenceGenome, readId, isReverseComplement, read, seedLength, margin, aligner, fmIndex):
+    ''' referenceGenome, readId, read, seedLength, margin, aligner, fmIndex'''
     results = []
     seed = read[0:seedLength]
     
@@ -50,10 +50,10 @@ def seed_and_extend(referenceGenome, read, seedLength, margin, aligner, fmIndex)
         
         i += 1
         
-        results.append((start - seedLength, alignmentScore, transcript))
+        results.append((readId, isReverseComplement, start - seedLength, alignmentScore, transcript))
     
     # print('seed_and_extend completed')
-    results.sort(key=lambda x: x[1], reverse=True)
+    results.sort(key=lambda x: x[3], reverse=True)
     return results
     
 

@@ -25,7 +25,7 @@ def readFASTA(fasta_file):
 def readFASTQ(fastq_file):
   arr = []
   for seq_record in SeqIO.parse(fastq_file, "fastq"):
-    arr.append(seq_record.seq)
+    arr.append([seq_record.id, seq_record.seq])
   return arr
 
 
@@ -37,14 +37,15 @@ def readFASTQ(fastq_file):
 
 
 def store_to_csv(data, exportFileName):
-    df = pd.DataFrame(data, columns =['position','alignment_score','transcript'])
+    df = pd.DataFrame(data, columns =['read_id', 'is_rev_comp', 'position','alignment_score','transcript'])
     df.to_csv(exportFileName)
 
 
 # Main program
-def main():
+# def main():
+def main(fasta, fastq, match, mismatch, gap, seedlength, margin):
     # To pass argv in Spyder -> Run>Configuration per file>Command line options. i.e: 2 3 a
-    script, fasta, fastq, match, mismatch, gap, seedlength, margin = sys.argv
+    # script, fasta, fastq, match, mismatch, gap, seedlength, margin = sys.argv
     
     match = int(match)
     mismatch= int(mismatch)
@@ -77,28 +78,42 @@ def main():
     
     i = 1
     print("Start reads")
-    fileName = 'results/result_read'
+    # fileName = 'results/result_read'
 
-    results = []
+    step = 20
+    bestResults = []
     for read in reads:
-        print_curr_datetime("Start datetime for read " + str(i))
+        if i % step == 0:
+            print_curr_datetime("Start datetime for read " + str(i))
         
-        results = seed_and_extend(referenceGenome, read, seedlength, margin, aligner, fmIndex)
-        store_to_csv(results, fileName + str(i)+'.csv')
+        results = seed_and_extend(referenceGenome, read[0], False, read[1], seedlength, margin, aligner, fmIndex)
+        if (len(results) > 0):
+            bestResults.append(results[0]) # For all
+            
+        # store_to_csv(results, fileName + str(i)+'.csv')
         
-        print_curr_datetime("End datetime for read " + str(i))
+        if i % step == 0:
+            print_curr_datetime("End datetime for read " + str(i))
         
         
-        print_curr_datetime("Start datetime for reversed read " + str(i))
+        if i % step == 0:
+            print_curr_datetime("Start datetime for reversed read " + str(i))
         
-        read = reverse_complement(read)
-        results = seed_and_extend(referenceGenome, read, seedlength, margin, aligner, fmIndex)
-        store_to_csv(results, fileName + 'reversed' + str(i)+'.csv')
+        reverseCompRead = reverse_complement(read[1])
         
-        print_curr_datetime("End datetime for reversed read " + str(i))
+        results = seed_and_extend(referenceGenome, read[0], True, reverseCompRead, seedlength, margin, aligner, fmIndex)
+        if (len(results) > 0):
+            bestResults.append(results[0]) # For all
+            
+        # store_to_csv(results, fileName + 'reversed' + str(i)+'.csv')
+        
+        if i % step == 0:
+            print_curr_datetime("End datetime for reversed read " + str(i))
         
         i += 1
     
+    
+    store_to_csv(bestResults, 'results/results_ours/our_results' + str(match) + str(mismatch) + str(gap) + '.csv')
     
     print("Finish reads and all")
     
@@ -121,14 +136,25 @@ def main():
     '''
 
 if __name__ == "__main__":
-    main()
+    fasta = 'example_human_reference.fasta'
+    fastq = 'example_human_Illumina.pe_1.fastq'
+    seed = 10
+    margin = 2
+    
+    for match in range(1,3):
+        for mismatch in range(-3,-1):
+            for gap in range(-7, -4):
+                if gap == -6:
+                    continue
+                main(fasta, fastq, match, mismatch, gap, seed, margin)
+    # main()
 
 
     '''
     for match in range(0,3):
         for mismatch in range(-3,-1):
             for gap in range(-7, -4):
-                if gap == -5:
+                if gap == -6:
                     continue
                 aligner = Aligner(match, mismatch, gap)
     '''
