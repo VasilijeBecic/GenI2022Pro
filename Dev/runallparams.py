@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun May 29 17:10:24 2022
-
-@author: vbeci
 """
 import sys
 

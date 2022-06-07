@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun May 22 20:34:09 2022
 
-@author: vbeci
 """
 
 import numpy

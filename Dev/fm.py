@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun May 22 17:39:34 2022
 
-@author: vbeci
 """
 
 from bwt import BWT

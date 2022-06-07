@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue May 24 20:41:40 2022
-
-@author: vbeci
 """
 from seedandextend import seed_and_extend
 from seedandextend import reverse_complement
