@@ -13,7 +13,7 @@ import numpy
         maxb, minb = max(a, b), min(a, b)
         if minb == 'A' and maxb == 'G': return -1
         if minb == 'C' and maxb == 'T': return -1
-        return -2
+        return -3
 '''
 
 class Aligner:
